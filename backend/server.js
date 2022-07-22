@@ -9,6 +9,7 @@ const { authenticator, upsertUser, cookieAuth } = require("./authentication");
 const auth = basicAuth({
     authorizer: authenticator
 });
+
 const cookieParser = require("cookie-parser");
 app.use(cookieParser("82e4e438a0705fabf61f9854e3b575af"));
 // AUTH---
@@ -20,6 +21,7 @@ app.use(cors({
     credentials: true,
     origin: 'http://localhost:3000'
 }));
+
 app.use(bodyParser.json({ extended: true }));
 app.listen(port, () => console.log("Backend server live on " + port));
 
@@ -42,6 +44,8 @@ function addItem(request, response) {
       Current_date: curDate,
       Due_date: dueDate
     }
+
+    const jsonString = JSON.stringify(newTask)
   
     var data = fs.readFileSync('database.json');
     var json = JSON.parse(data);
@@ -75,7 +79,7 @@ app.get("/items/search", searchItems)
     //console.log(searchField);
 
     var json = JSON.parse(fs.readFileSync("database.json"));
-    var returnData = json.filter((jsondata) => jsondata.Task.includes(searchField));
+    var returnData = json.filter(jsondata => jsondata.Task === searchField);
 
     //uncomment to see the todolists found in the backend service//
     //console.log(returnData);
@@ -100,3 +104,6 @@ app.get("/logout", (req, res) => {
     res.clearCookie('user');
     res.end();
 });
+
+
+
